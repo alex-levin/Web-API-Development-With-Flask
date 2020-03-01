@@ -1,0 +1,88 @@
+Safari:
+https://learning.oreilly.com/videos/web-api-development/9781783551750
+
+***********
+Install pip
+***********
+sudo apt install python-pip3 python3-venv
+
+***************************************************
+Setting up development environment with env and WSL
+***************************************************
+cd /c/users/Alex/Documents/Projects
+mkdir Web-API-Development-With-Flask/source/sec1.2/funny_api
+cd funny_api
+python3 -m venv venv
+source venv/bin/activate
+(venv) $ pip install flask
+(venv) $ python app.python
+
+http://127.0.0.1:5000/api/funny
+
+****************
+Project entities
+****************
+Candidate:
+id: uuid
+first_name: string
+last_name: string
+experience: Experience[]
+
+Experience:
+domain: string
+years: interestingprojects: Projects[]
+
+Project:
+id: uuid
+name: string
+description: string
+start_date: datetime
+end_date: datetime
+
+
+
+****************************************
+Flask Routing: route() vs add_url_rule()
+****************************************
+
+https://www.reddit.com/r/flask/comments/bimabx/flask_routing_route_vs_add_url_rule/
+While understanding what a route/view in Flask is, is there any significant advantage of
+using one over the other when it comes to writing a Flask app? Is is it simply a matter
+of programmer preference?
+
+@route() is the easiest way to register functions to endpoints, however, it becomes very
+messy when you have a lot of endpoints. With this, code maintainability is will not be easy.
+With add_url_rule (), you can move functions to separate python files and you can easily group
+related sources. Use pluggable views to simplify you code base.
+
+Any chance you got a sample with this setup?
+Would be interesting to compare.
+
+Take for example the MethodView:
+
+class CounterAPI(MethodView):
+
+    def get(self):
+        return session.get('counter', 0)
+
+    def post(self):
+        session['counter'] = session.get('counter', 0) + 1
+        return 'OK'
+
+app.add_url_rule('/counter', view_func=CounterAPI.as_view('counter'))
+
+You can easily move the CounterAPI class to another Python file or module.
+With @app.route() decorator, you cannot. Why? Importing the application
+instance to another Python module will create a "circular dependency"
+which result into an error.
+
+EDIT: Again, it depends on how many routes you are going to create. If you
+only have a few, better use @route() decorator. But if you have a big code
+base, you need to refactor.
+
+That's cool. Will defs keep that in mind. Thing is, this could be useful if you grouped them.
+Cause you'd have your core routes that you never touched but take up scrolling space.
+So move them to another base routes file or somethnig.
+So something like login or home page would be elsewhere but new features and stuff could be
+on the main routes page.
+Lots of options.
